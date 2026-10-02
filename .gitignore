@@ -1,0 +1,59 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+**/appsettings.Development.json
+
+# .NET
+**/bin/
+**/obj/
+*.user
+
+# Node
+node_modules/
+dist/
+coverage/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+*.tfplan
+crash.log
+
+*.backup
+
+infrastructure/.env
+
+**/.env
+**/.env.*
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+appsettings.Development.json
+appsettings.Production.json
+**/secrets/
+**/*.pfx
+**/*.pem
+**/*.key
+
+# Build output
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/coverage/
+
+# Local files and backups
+.DS_Store
+*.backup
+*.step123.backup

@@ -1,0 +1,47 @@
+name: cloudforge
+
+services:
+  api:
+    build:
+      context: ../backend/CloudForge.Api
+    image: cloudforge-api:compose
+    ports:
+      - "127.0.0.1:5097:8080"
+    environment:
+      ASPNETCORE_HTTP_PORTS: "8080"
+      Jwt__Secret: "${CLOUDFORGE_JWT_SECRET}"
+      Jwt__Issuer: "CloudForge"
+      Jwt__Audience: "CloudForgeUsers"
+      ConnectionStrings__CloudForgeDb: "Host=postgres;Port=5432;Database=cloudforge;Username=cloudforge;Password=${CLOUDFORGE_DB_PASSWORD}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ../frontend
+    image: cloudforge-frontend:dev
+    ports:
+      - "127.0.0.1:5179:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: cloudforge
+      POSTGRES_USER: cloudforge
+      POSTGRES_PASSWORD: "${CLOUDFORGE_DB_PASSWORD}"
+    volumes:
+      - cloudforge_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudforge -d cloudforge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  cloudforge_postgres_data:

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/CloudForge.Api/CloudForge.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CloudForge.Api.Tests/CloudForge.Api.Tests.csproj" />
+  </Folder>
+</Solution>

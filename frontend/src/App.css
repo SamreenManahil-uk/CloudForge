@@ -1,0 +1,10 @@
+#root {
+  min-height: 100vh;
+}
+
+.panel {
+  border: 1px solid #1e293b;
+  border-radius: 1rem;
+  background: #0f172a;
+  padding: 1.5rem;
+}

@@ -1,0 +1,42 @@
+name: CloudForge Container Security
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  container-security:
+    name: Trivy Security Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t cloudforge-api:scan ./backend/CloudForge.Api
+
+      - name: Build frontend image
+        run: docker build -t cloudforge-frontend:scan ./frontend
+
+      - name: Scan backend
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: cloudforge-api:scan
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true
+
+      - name: Scan frontend
+        uses: aquasecurity/trivy-action@0.33.1
+        with:
+          image-ref: cloudforge-frontend:scan
+          format: table
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          ignore-unfixed: true

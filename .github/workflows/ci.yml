@@ -1,0 +1,62 @@
+name: CloudForge DevSecOps CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend Quality
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - run: npm audit --audit-level=high
+
+  backend:
+    name: Backend Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - run: dotnet restore CloudForge.slnx
+
+      - run: dotnet build CloudForge.slnx --configuration Release --no-restore
+
+      - run: dotnet test CloudForge.slnx --configuration Release --no-build
+
+      - run: dotnet list CloudForge.slnx package --vulnerable --include-transitive
+
+  containers:
+    name: Container Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: docker build -t cloudforge-api:ci ./backend/CloudForge.Api
+
+      - run: docker build -t cloudforge-frontend:ci ./frontend

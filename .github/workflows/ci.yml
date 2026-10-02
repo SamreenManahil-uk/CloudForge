@@ -46,7 +46,13 @@ jobs:
 
       - run: dotnet build CloudForge.slnx --configuration Release --no-restore
 
-      - run: dotnet test CloudForge.slnx --configuration Release --no-build
+      - name: Run backend tests
+        run: dotnet test CloudForge.slnx --configuration Release --no-build
+        env:
+          Jwt__Secret: "CloudForgeTestingOnlySecretKey2026NotForProduction123"
+          Jwt__Issuer: "CloudForge"
+          Jwt__Audience: "CloudForge"
+
 
       - run: dotnet list CloudForge.slnx package --vulnerable --include-transitive
 

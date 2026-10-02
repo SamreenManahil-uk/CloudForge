@@ -24,7 +24,7 @@ jobs:
         run: docker build -t cloudforge-frontend:scan ./frontend
 
       - name: Scan backend
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: cloudforge-api:scan
           format: table
@@ -33,7 +33,7 @@ jobs:
           ignore-unfixed: true
 
       - name: Scan frontend
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: cloudforge-frontend:scan
           format: table
